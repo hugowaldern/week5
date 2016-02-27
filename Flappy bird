@@ -1,0 +1,146 @@
+float[] values;
+int index;
+int space = 10;
+//int a = 100;
+
+int circ = 20;        // Width of the shape
+float xpos, ypos;    // Starting position of shape    
+
+//float xspeed = 2.8;  // Speed of the shape
+float yspeed = 2.2;  // Speed of the shape
+
+//int xdirection = 1;  // Left or Right
+int ydirection = 100;  // Top to Bottom
+
+//int x1 = 25;
+//int x2 = 30;
+//int x3 = 25;
+//int y1 = 25;
+//int y2 = 30;
+//int y3 = 30;
+
+void setup() {
+  size(600, 400);
+  background(0);
+  frameRate(40);
+  ypos = height/2;
+  values = new float[width/3];
+  index = 0;
+}
+float maybeRandomHeight() {
+  if (space % 25 == 0) { 
+    //if (1 < 2 ){
+    return random(height/3, 2*height/3.5);
+  } else {
+    return 0;
+  }
+}
+
+void draw() {
+  colorMode (RGB, 255, 255, 255);
+  background(100, 100, 100);
+
+
+  //ypos = ypos +(yspeed*ydirection);
+
+  if (ydirection >height - circ || ydirection < circ) {
+    ydirection *= -1;
+  }
+   fill(236, 187, 56);
+  ellipse (32, ydirection, 7, 7);
+  fill(77, 197, 197);
+  ellipse (20, ydirection, circ, circ);
+  fill(77, 197, 197);
+  ellipse (10, ydirection, 7, 7);
+    fill(0,0,0);
+  ellipse (26, ydirection, 2, 2);
+  //beginShape(); 
+  //vertex(x1,y1);
+  //vertex(x2,y2);
+  //vertex(x3,y3);
+  //endShape(CLOSE);
+  ydirection = ydirection+ 1;
+
+  if (keyPressed) {
+    ellipse (20, ydirection, circ, circ);
+    ydirection = ydirection - 8;
+  }
+
+  values[index] = maybeRandomHeight();
+  index = index + 1;
+  if (index >= values.length) {
+    index = 0;
+  }
+
+  for (int i = 0; i < values.length; ++i) {
+    int realIndex = index + i;
+    if (realIndex >= values.length) {
+      realIndex -= values.length;
+    }
+
+    if (ydirection > i - circ || ydirection < circ) {
+      ydirection *= -1;
+
+      fill (0, 0, 0);
+      rect(i*4, height-values[realIndex] + 50, 50, height);
+
+      if (values[realIndex] != 0) {
+
+        rect(i*4, height-values[realIndex]-50, 50, -200);
+
+        if (ypos >  - circ || ydirection < circ)
+          ydirection *=-1;
+      }
+    }
+  }
+  space++;
+}
+
+//i have started to alter my code based on bounce expample.
+//i believe by keeping xdirection the dame and implementing
+//ydirection with a keypress, i will be able to make the ball float. 
+//make y speed double the xspeed in order to make fast adjustments. 
+//the ball shows, but it only appears when the lines are drawn. 
+//the ball does not drop and is unresponsive to keypress function. 
+//I will set the ball to drop by changing my y variable in my first statement
+
+//ball drops with changing ydirection from 150 to 1, still need to suplement the keypress
+//and also the line baricade. 
+
+//simply writing keypressed in the ellipse variable will not bounce the ball up higher.
+//what tells the ball to bounce higher. whe code is written over and over again
+//in if statement after the ellipse is drawn with the command after it to give it 
+//context and comnd of what to do should the ball fall. make a subtraction statement 
+//should the key be pressed. 
+//ball is falling to hard even with a key press, need to adjust variables. 
+
+//take out x speed and y speed. take out xpos statements
+//reset. 
+//after watching an animation. i have seen that the easiest way to animate the circle
+//motion is to set and if statment for is the key is pressed. Nathaniels suggestion. 
+//he has also suggested upping my frame rate to make the code less glitchy, 
+//and in return turn down my i statements in the line. this will keep the 
+//lines as i had them before but without the glitch. 
+//now I want to space out the lines.
+
+//in order to space out the lines, I will hve to work with the 
+//I variables to get an equal distance. 
+//increased 1 - 4,  distanced lines correctly, but there is a wait time at the 
+//beginning of the animation...
+//solution, increase the width to generate faster lines. 
+
+//change lines to colored rectangles like in the game. 
+//lines to rect ...
+//rect is being drawn over and ove again. 
+//made the y2 variable -200 to start from the top, then drew the rect to a random 
+//point defined byi*4, height-values[realIndex]-75,
+
+//making the walls stop the bird. 
+//bouncing example again. 
+
+//I am unsure how to make the ball stop at the square. 
+
+// ai is causing an issue. its rooted to the ellipse and adding variables to it can lead
+//to it becoming an invalid ellipse for too many variables. 
+//in order to integrate information to match with blocking functions, I will
+//need to look over how i can supplement information into
