@@ -1,0 +1,162 @@
+final int maxSegments = 100;
+int[] xSegments = new int[maxSegments];
+int[] ySegments = new int[maxSegments];
+
+final int gridSize = 20;
+
+void setup() {
+  size(500, 500);
+  for (int i = 0; i < maxSegments; i += 1) {
+    xSegments[i] = ySegments[i] = -1;
+  }
+  xSegments[0] = width/2 / gridSize;
+  ySegments[0] = width/2 / gridSize;
+  snakeLength = 1;
+  foodX = 10;
+  foodY = 20;
+  ellipseMode(CORNER);
+}
+
+int lastMove = 0;
+int timeBetweenMoves = 500;
+
+int xSpeed = 1;
+int ySpeed = 0;
+int snakeLength;
+
+int foodX;
+int foodY;
+
+//int foodX2;
+//int foodY2;
+
+int xpos,ypos;
+int xdirection = 1; 
+int ydirection = 1;
+
+void draw() {
+  background(255);
+  noStroke();
+
+ //bounary setup
+  if (xpos>width-gridSize || xpos < xSegments[2]);
+  xSegments[2]*= -1;
+  //ysegments[1]*= -1;
+   
+  fill(0);
+  for (int i = 0; i < maxSegments; i += 1) {
+    rect(xSegments[i]*gridSize, ySegments[i]*gridSize, gridSize, gridSize);
+    
+  }
+//red ellipse
+  fill(255, 0, 0);
+  ellipse(foodX * gridSize, foodY * gridSize, gridSize, gridSize);
+  
+  if (millis() - lastMove > timeBetweenMoves) {
+    lastMove = millis();
+    int nextX = xSegments[0] + xSpeed;
+    int nextY = ySegments[0] + ySpeed;
+
+    for (int i = snakeLength-1; i > 0; i -= 1) {
+      xSegments[i] = xSegments[i-1];
+      ySegments[i] = ySegments[i-1];
+    }
+    if (isThereASegmentAtPosition(nextX, nextY)) {
+      // snake hit itself! reset the game!
+      setup();
+    } else {
+      xSegments[0] = nextX;
+      ySegments[0] = nextY;
+      if (nextX == foodX && nextY == foodY) {
+        getFood();
+      }
+    }
+  }
+
+  //second ellipse
+  fill(0, 255, 0);
+  ellipse(foodX * gridSize/2, foodY * gridSize/2, gridSize, gridSize);
+
+  if (millis() - lastMove > timeBetweenMoves) {
+    lastMove = millis();
+    int nextX = xSegments[0] + xSpeed;
+    int nextY = ySegments[0] + ySpeed;
+
+    for (int i = snakeLength-1; i > 0; i -= 1) {
+      xSegments[i] = xSegments[i-1];
+      ySegments[i] = ySegments[i-1];
+    }
+    if (isThereASegmentAtPosition(nextX, nextY)) {
+      // snake hit itself! reset the game!
+      setup();
+    } else {
+      xSegments[0] = nextX/2;
+      ySegments[0] = nextY/2;
+      if (nextX == foodX && nextY == foodY) {
+        getFood();
+      }
+    }
+  }
+}
+
+void getFood() {
+  snakeLength += 1;
+
+  while (isThereASegmentAtPosition(foodX, foodY)) {
+    foodX = floor(random(width/gridSize));
+    foodY = floor(random(width/gridSize));
+  }
+}
+
+boolean isThereASegmentAtPosition(int x, int y) {
+  for (int i = 0; i < snakeLength; i += 1) {
+    if (xSegments[i] == x && ySegments[i] == y) {
+      return true;
+    }
+  }
+  return false;
+}
+
+//movement function. 
+void keyPressed() {                      
+  if (key == CODED) {
+    if (keyCode == UP) {
+      ySpeed = -1;
+      xSpeed = 0;
+    }
+    if (keyCode == DOWN) {
+      ySpeed = 1;
+      xSpeed = 0;
+    }
+    if (keyCode == RIGHT) {
+      ySpeed = 0;
+      xSpeed = 1;
+    }
+    if (keyCode == LEFT) {
+      ySpeed = 0;
+      xSpeed = -1;
+    }
+  }
+}
+
+//locate how the snake grows/ boolean line 73 (temp)
+//repeat secont ellipse by copying it, then work to get its function in order
+// by  copying the ellipse and its presumed variables, I have accidently coded
+//the snake to counce off the original ellipse and reset itself. I will
+//coment out code in order to find out what the broken link is. 
+//ellipse is being written over itself in the same position. i must move the ellipse
+//by adjusting its location (ellipse) and its color. 
+//attempt to add other variables ir replcement.. 
+//realizing from examples, adding /2 to its location can adjust the circles location. 
+//snake cannot pick up second ellipse. 
+//looking into variable of the void seytup to see what makes the ellipse food... food
+//what is the red ellipse referencing that the green isnt?
+//must be before, after the ellipse is collected, then the block grows/ boolean ft
+//tried adding variables to food x,y, did not work
+//added constraints, variables did not work/ I have run out of time. 
+ //Sorry i ran out of time, i am pretty confident i could have figured this out, 
+ //something with the ties between the int setup, gridsize and the other factors that 
+ //determine x and ydirection. as for the speed up, im sure an if statement with a +
+ //on the milli second count timer for the rect. I would have liked to have added a game 
+ //over text when the player loses using the text function we practiced earlier 
+ //this semester. I did as much as I could with the time I had. 
